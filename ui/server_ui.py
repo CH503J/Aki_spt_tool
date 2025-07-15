@@ -3,9 +3,9 @@
 # @FileName  :server_ui.py
 # @Time      :2025/7/15 13:58
 # @Author    :CH503J
+from PyQt6.QtWidgets import (QVBoxLayout, QLabel, QWidget, QPushButton)
 
-
-from PyQt6.QtWidgets import ( QVBoxLayout, QLabel, QWidget )
+from common.message_utils import message_notice
 
 
 class ServerTab(QWidget):
@@ -13,4 +13,9 @@ class ServerTab(QWidget):
         super().__init__()
         layout = QVBoxLayout()
         layout.addWidget(QLabel("这是启停页"))
+
+        btn = QPushButton("启动服务")
+        btn.clicked.connect(lambda: message_notice(self, "启动服务成功！"))
+        layout.addWidget(btn)
+
         self.setLayout(layout)

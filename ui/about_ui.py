@@ -3,9 +3,7 @@
 # @FileName  :about_ui.py
 # @Time      :2025/7/15 14:00
 # @Author    :CH503J
-
-
-from PyQt6.QtWidgets import ( QVBoxLayout, QLabel, QWidget )
+from PyQt6.QtWidgets import (QVBoxLayout, QLabel, QWidget)
 
 
 class AboutTab(QWidget):

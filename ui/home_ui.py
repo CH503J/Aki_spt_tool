@@ -5,7 +5,7 @@
 # @Author    :CH503J
 from PyQt6.QtWidgets import (QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QPushButton)
 
-from common.toast_utils import show_toast
+from common.message_utils import message_notice
 from ui.about_ui import AboutTab
 from ui.search_ui import SearchTab
 from ui.server_ui import ServerTab
@@ -40,6 +40,7 @@ class HomeWindow(QMainWindow):
         self.setCentralWidget(central_widget)
 
 
+# 测试标签页，调试气泡消息通知用
 class ToastTest(QWidget):
     def __init__(self):
         super().__init__()
@@ -49,7 +50,7 @@ class ToastTest(QWidget):
 
         # 添加按钮用于触发通知
         btn = QPushButton("点击我推送通知")
-        btn.clicked.connect(lambda: show_toast(self.window(), "程序正在做事..."))
+        btn.clicked.connect(lambda: message_notice(self.window(), "程序正在做事..."))
         layout.addWidget(btn)
 
         self.setLayout(layout)
