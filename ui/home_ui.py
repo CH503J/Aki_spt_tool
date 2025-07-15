@@ -3,6 +3,7 @@
 # @FileName  :home_ui.py
 # @Time      :2025/7/15 13:58
 # @Author    :CH503J
+from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtWidgets import (QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QPushButton)
 
 from common.message_utils import message_notice
@@ -20,7 +21,8 @@ class HomeWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Launcher 主界面")
-        self.setGeometry(100, 100, 1200, 600)
+        self.setGeometry(100, 100, 1000, 500)
+        self.center()
 
         # 创建主标签页控件
         tabs = QTabWidget()
@@ -38,6 +40,14 @@ class HomeWindow(QMainWindow):
         layout.addWidget(tabs)
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
+
+    def center(self):
+        """将窗口移动到屏幕中心"""
+        screen = QGuiApplication.primaryScreen().availableGeometry()
+        size = self.geometry()
+        x = (screen.width() - size.width()) // 2
+        y = (screen.height() - size.height()) // 2
+        self.move(x, y)
 
 
 # 测试标签页，调试气泡消息通知用

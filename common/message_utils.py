@@ -8,10 +8,10 @@ from PyQt6.QtCore import Qt, QTimer, QPropertyAnimation, QObject
 
 # 文本颜色 + emoji 映射
 LEVEL_STYLE = {
-    "info":    {"emoji": "ℹ️",  "color": "#3399ff"},
-    "success": {"emoji": "✅",  "color": "#28a745"},
-    "warning": {"emoji": "⚠️",  "color": "#d98400"},
-    "error":   {"emoji": "❌",  "color": "#dc3545"},
+    "info":    {"emoji": "ℹ️",  "color": "#00A6ED"},
+    "success": {"emoji": "✅",  "color": "#00D26A"},
+    "warning": {"emoji": "⚠️",  "color": "#FFB02E"},
+    "error":   {"emoji": "❌",  "color": "#F92F60"},
 }
 
 class MessageManager(QObject):
@@ -108,5 +108,19 @@ class MessageManager(QObject):
 
 
 def message_notice(parent_widget, message: str, duration: int = 3000, level: str = "info"):
+    """
+        显示消息提示气泡
+
+        参数:
+            parent_widget (QWidget): 父级控件，用于定位消息提示的位置\n
+            message (str): 要显示的消息文本\n
+            duration (int): 消息显示持续时间(毫秒)，默认3000ms\n
+            level (str): 消息级别，可选值: info/success/warning/error，默认info
+        功能:
+            根据消息级别显示带对应图标和颜色的提示框\n
+            支持深色/浅色模式自动适配\n
+            多个消息会垂直堆叠显示\n
+            自动处理消息的淡入淡出动画效果\n
+        """
     manager = MessageManager.get(parent_widget)
     manager.show_toast(message, duration, level)
