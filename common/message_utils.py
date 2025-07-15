@@ -6,15 +6,22 @@
 from PyQt6.QtWidgets import QLabel, QApplication, QGraphicsOpacityEffect
 from PyQt6.QtCore import Qt, QTimer, QPropertyAnimation, QObject
 
+# 文本颜色 + emoji 映射
+LEVEL_STYLE = {
+    "info":    {"emoji": "ℹ️",  "color": "#3399ff"},
+    "success": {"emoji": "✅",  "color": "#28a745"},
+    "warning": {"emoji": "⚠️",  "color": "#d98400"},
+    "error":   {"emoji": "❌",  "color": "#dc3545"},
+}
 
 class MessageManager(QObject):
     """管理所有消息气泡的叠加与位置"""
-    _instances = {}  # 每个窗口独立一个
+    _instances = {}
 
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.active_toasts = []  # 当前所有显示中的气泡
+        self.active_toasts = []
 
     @classmethod
     def get(cls, parent_widget):
@@ -22,8 +29,13 @@ class MessageManager(QObject):
             cls._instances[parent_widget] = MessageManager(parent_widget)
         return cls._instances[parent_widget]
 
-    def show_toast(self, message: str, duration: int = 3000):
-        toast = QLabel(message, self.parent)
+    def show_toast(self, message: str, duration: int = 3000, level: str = "info"):
+        # 获取 emoji 与文字颜色
+        config = LEVEL_STYLE.get(level, LEVEL_STYLE["info"])
+        emoji = config["emoji"]
+        color = config["color"]
+
+        toast = QLabel(f"{emoji}  {message}", self.parent)
         toast.setAlignment(Qt.AlignmentFlag.AlignCenter)
         toast.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
 
@@ -32,28 +44,24 @@ class MessageManager(QObject):
         bg_color = palette.color(palette.ColorRole.Window)
         is_dark_mode = bg_color.value() < 128
 
-        # 样式适配
+        # 背景样式跟随系统，文本颜色根据 level 设置
         if is_dark_mode:
-            style = """
-                QLabel {
-                    background-color: #444;
-                    color: white;
-                    padding: 10px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
-                }
-            """
+            bg = "#444"
+            border = "none"
         else:
-            style = """
-                QLabel {
-                    background-color: #eee;
-                    color: black;
-                    padding: 10px 20px;
-                    border-radius: 8px;
-                    font-size: 14px;
-                    border: 1px solid #aaa;
-                }
-            """
+            bg = "#eee"
+            border = "1px solid #aaa"
+
+        style = f"""
+            QLabel {{
+                background-color: {bg};
+                color: {color};
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                border: {border};
+            }}
+        """
         toast.setStyleSheet(style)
 
         # 淡出效果
@@ -67,7 +75,7 @@ class MessageManager(QObject):
 
         toast.show()
 
-        # 淡出 + 删除
+        # 延迟淡出动画
         def start_fade():
             anim = QPropertyAnimation(effect, b"opacity")
             anim.setDuration(1000)
@@ -76,12 +84,13 @@ class MessageManager(QObject):
 
             def on_finished():
                 toast.deleteLater()
-                self.active_toasts.remove(toast)
-                self.relayout_toasts()
+                if toast in self.active_toasts:
+                    self.active_toasts.remove(toast)
+                    self.relayout_toasts()
 
             anim.finished.connect(on_finished)
             anim.start()
-            toast._anim = anim  # 防止被GC
+            toast._anim = anim  # 避免被垃圾回收
 
         QTimer.singleShot(duration - 1000, start_fade)
 
@@ -98,6 +107,6 @@ class MessageManager(QObject):
             y += toast.height() + spacing
 
 
-def message_notice(parent_widget, message: str, duration: int = 3000):
+def message_notice(parent_widget, message: str, duration: int = 3000, level: str = "info"):
     manager = MessageManager.get(parent_widget)
-    manager.show_toast(message, duration)
+    manager.show_toast(message, duration, level)

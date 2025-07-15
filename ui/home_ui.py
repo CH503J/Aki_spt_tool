@@ -28,9 +28,9 @@ class HomeWindow(QMainWindow):
 
         tabs.addTab(SearchTab(), "搜索")
 
-        tabs.addTab(AboutTab(), "关于")
-
         tabs.addTab(ToastTest(), "测试")
+
+        tabs.addTab(AboutTab(), "关于")
 
         # 设置中央布局
         central_widget = QWidget()
@@ -50,7 +50,7 @@ class ToastTest(QWidget):
 
         # 添加按钮用于触发通知
         btn = QPushButton("点击我推送通知")
-        btn.clicked.connect(lambda: message_notice(self.window(), "程序正在做事..."))
+        btn.clicked.connect(lambda: message_notice(self.window(), "这是测试页气泡", 5000, level="error"))
         layout.addWidget(btn)
 
         self.setLayout(layout)

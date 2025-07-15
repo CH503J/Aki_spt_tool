@@ -15,7 +15,7 @@ class ServerTab(QWidget):
         layout.addWidget(QLabel("这是启停页"))
 
         btn = QPushButton("启动服务")
-        btn.clicked.connect(lambda: message_notice(self.window(), "启动服务成功！"))
+        btn.clicked.connect(lambda: message_notice(self.window(), "启动服务成功！", 5000, level="success"))
         layout.addWidget(btn)
 
         self.setLayout(layout)

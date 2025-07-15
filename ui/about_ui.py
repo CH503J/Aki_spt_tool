@@ -15,6 +15,6 @@ class AboutTab(QWidget):
         layout.addWidget(QLabel("这是关于页"))
 
         btn = QPushButton("关于页气泡测试")
-        btn.clicked.connect(lambda: message_notice(self.window(), "这是关于页气泡测试"))
+        btn.clicked.connect(lambda: message_notice(self.window(), "这是关于页气泡", 5000, level="info"))
         layout.addWidget(btn)
         self.setLayout(layout)
