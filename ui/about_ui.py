@@ -98,14 +98,14 @@ class AboutTab(QWidget):
     def save_path(self):
         path = self.input_path.text().strip()
         if not path:
-            message_notice(self, "请选择正确的游戏根目录！")
+            message_notice(self, "请选择正确的游戏根目录！", 5000, "error")
             return
 
         success = save_root_path(path)
         if success:
             message_notice(self, "保存成功！")
         else:
-            message_notice(self, "保存失败！")
+            message_notice(self, "请选择正确的游戏根目录！", 5000, "error")
 
     # 获取游戏根目录
     def load_root_path(self):
