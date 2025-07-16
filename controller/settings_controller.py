@@ -3,11 +3,8 @@
 # @FileName  :settings_controller.py
 # @Time      :2025/7/16 08:53
 # @Author    :CH503J
-import json
-import os
 
-from common.message_utils import message_notice
-from service.settings_service import fetch_game_info, save_game_info, update_spt_info
+from service.settings_service import fetch_game_info, save_game_info, update_spt_info, get_gift_code
 
 
 def get_game_info() -> dict:
@@ -24,8 +21,7 @@ def save_root_path(path: str) -> bool:
     :param path: 游戏根目录路径
     :return: 是否插入成功
     """
-    r = save_spt_info(path)
-    if not r:
+    if not save_spt_info(path):
         return False
     return save_game_info("root_path", path)
 
@@ -36,7 +32,11 @@ def save_spt_info(path: str) -> bool:
     - 从 game_root_path 获取 SPT.Server.exe
     - 保存 server_path 和 server_name 两个字段
     """
-    r = update_spt_info(path)
-    if not r:
+    if not update_spt_info(path):
         return False
-    return r
+    return update_spt_info(path)
+
+
+def get_all_gift_code() -> set[str]:
+    """获取所有礼包码"""
+    return get_gift_code()

@@ -12,6 +12,7 @@ from common.sql_utils import load_sql_queries
 
 SQL_QUERIES = load_sql_queries(get_sql_path("game_info.sql"))
 
+
 def fetch_game_info() -> dict:
     db_path = get_db_path("app.db")
 
@@ -61,6 +62,7 @@ def save_game_info(key: str, value: str) -> bool:
         print(f"[错误] 保存游戏路径失败: {e}")
         return False
 
+
 def update_spt_info(path: str) -> bool:
     if not path:
         print("[错误] 未设置游戏根目录，无法获取 SPT 信息")
@@ -97,6 +99,23 @@ def update_spt_info(path: str) -> bool:
             ok_version = False
 
     return ok_path and ok_name and ok_version
+
+
+def get_gift_code() -> set[str]:
+    game_root = fetch_game_info().get("root_path")
+    gift_path = os.path.join(game_root, "SPT_Data", "Server", "configs", "gifts.json")
+    if not os.path.exists(gift_path):
+        print(f"[警告] 未找到 gifts.json，检查根目录是否正确：{game_root}")
+        return set()
+    else:
+        try:
+            with open(gift_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                gift_keys = set(data.get("gifts", {}).keys())
+                return gift_keys
+        except Exception as e:
+            print(f"[错误] 解析 gifts.json 失败: {e}")
+            return set()
 
 
 if __name__ == '__main__':

@@ -12,12 +12,21 @@ from PyQt6.QtWidgets import (
 
 from common.message_utils import message_notice
 from controller.about_controller import get_app_info
-from controller.settings_controller import save_root_path, get_game_info
+from controller.settings_controller import save_root_path, get_game_info, get_all_gift_code
+
+
+def copy_to_clipboard(text: str, parent_widget):
+    """点击即复制"""
+    from PyQt6.QtGui import QGuiApplication
+    QGuiApplication.clipboard().setText(text)
+    print(f"[复制成功] {text}")
+    message_notice(parent_widget, f"礼包码 {text} 已复制到剪贴板！")
 
 
 class AboutTab(QWidget):
     def __init__(self):
         super().__init__()
+        self.gift_list = None
         self.label_name = None
         self.label_version = None
         self.label_author = None
@@ -73,12 +82,19 @@ class AboutTab(QWidget):
         settings_group.setLayout(form_layout)
 
         # --- 礼包码区域 ---
-        gift_group = QGroupBox("礼包码")
+        self.gift_list = get_all_gift_code()
+        gift_group = QGroupBox(f"礼包码（{len(self.gift_list)}）")
         gift_group.setToolTip("点击礼包码即可复制")
         self.gift_layout = QGridLayout()
         gift_group.setLayout(self.gift_layout)
 
         # TODO: 后续动态添加按钮
+
+        for i, gift_code in enumerate(self.gift_list):
+            btn = QPushButton(gift_code)
+            btn.clicked.connect(lambda _, v=gift_code: copy_to_clipboard(v, parent_widget=self.window()))
+            row, col = divmod(i, 5)
+            self.gift_layout.addWidget(btn, row, col)
 
         # --- 主布局整合 ---
         layout.addWidget(about_group)
