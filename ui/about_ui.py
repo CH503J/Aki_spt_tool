@@ -10,6 +10,8 @@ from PyQt6.QtWidgets import (
     QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QGridLayout
 )
 
+from controller.about_controller import get_app_info
+
 
 class AboutTab(QWidget):
     def __init__(self):
@@ -28,14 +30,15 @@ class AboutTab(QWidget):
         """
         软件信息区域，展示软件名称、版本号、开发者、GitHub主页等
         """
+        app_info = get_app_info()
         about_group = QGroupBox("关于软件")
         about_layout = QVBoxLayout()
 
-        self.label_name = QLabel("软件名称：")
-        self.label_version = QLabel("版本号：")
-        self.label_author = QLabel("开发者：")
+        self.label_name = QLabel(f"软件名称：{app_info.get('app_name', '未知')}")
+        self.label_version = QLabel(f"版本号：{app_info.get('version', '未知')}")
+        self.label_author = QLabel(f"开发者：{app_info.get('author', '未知')}")
 
-        self.github_label = QLabel('<a href="#">🌐 GitHub 主页</a>')
+        self.github_label = QLabel(f"<a href='{app_info.get('github_link', 'https://github.com/')}'>🌐 GitHub 主页</a>")
         self.github_label.setOpenExternalLinks(True)
         self.github_label.setStyleSheet("QLabel { color: #1e90ff; font-size: 14px; }")
 
