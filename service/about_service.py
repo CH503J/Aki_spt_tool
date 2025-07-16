@@ -33,3 +33,6 @@ def fetch_app_info() -> dict:
     except Exception as e:
         print(f"[错误] 读取 about_info 失败：{e}")
         return {}
+
+if __name__ == '__main__':
+    print(fetch_app_info())

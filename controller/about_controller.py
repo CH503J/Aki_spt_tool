@@ -14,7 +14,3 @@ SQL_QUERIES = load_sql_queries(get_sql_path("about_info.sql"))
 def get_app_info() -> dict:
     """供 UI 层调用，获取软件信息"""
     return fetch_app_info()
-
-
-if __name__ == '__main__':
-    print(get_app_info())

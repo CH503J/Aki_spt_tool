@@ -1,6 +1,6 @@
 -- =====================================CRUD=====================================
 -- name: get_game_info
-SELECT game_root_path, server_path, server_name, server_version,
+SELECT root_path, spt_server_path, spt_server_name, spt_server_version,
        fika_server_path, fika_server_name, fika_server_version
 FROM game_info LIMIT 1;
 

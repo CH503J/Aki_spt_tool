@@ -22,10 +22,10 @@ PRAGMA foreign_keys = false;
 DROP TABLE IF EXISTS "game_info";
 CREATE TABLE "game_info" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "game_root_path" TEXT,
-  "server_path" TEXT,
-  "server_name" TEXT,
-  "server_version" TEXT,
+  "root_path" TEXT,
+  "spt_server_path" TEXT,
+  "spt_server_name" TEXT,
+  "spt_server_version" TEXT,
   "fika_server_path" TEXT,
   "fika_server_name" TEXT,
   "fika_server_version" TEXT

@@ -10,7 +10,9 @@ from PyQt6.QtWidgets import (
     QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QGridLayout
 )
 
+from common.message_utils import message_notice
 from controller.about_controller import get_app_info
+from controller.settings_controller import save_root_path, get_game_info
 
 
 class AboutTab(QWidget):
@@ -23,14 +25,13 @@ class AboutTab(QWidget):
         self.input_path = None
         self.gift_layout = None
         self.init_ui()
+        self.load_root_path()
 
     def init_ui(self):
+        app_info = get_app_info()
         layout = QVBoxLayout()
 
-        """
-        软件信息区域，展示软件名称、版本号、开发者、GitHub主页等
-        """
-        app_info = get_app_info()
+        # --- 关于软件区域 ---
         about_group = QGroupBox("关于软件")
         about_layout = QVBoxLayout()
 
@@ -64,7 +65,7 @@ class AboutTab(QWidget):
         path_layout.addWidget(btn_select)
 
         btn_save = QPushButton("保存设置")
-        # btn_save.clicked.connect(self.save_path)  # 暂不绑定逻辑
+        btn_save.clicked.connect(self.save_path)
 
         form_layout.addRow("游戏根目录：", path_layout)
         form_layout.addRow(btn_save)
@@ -86,8 +87,29 @@ class AboutTab(QWidget):
         layout.addStretch()
         self.setLayout(layout)
 
+    # 选择游戏根目录
     def select_path(self):
         current = self.input_path.text().strip()
         folder = QFileDialog.getExistingDirectory(self, "选择游戏根目录", current or "")
         if folder:
             self.input_path.setText(folder)
+
+    # 保存游戏根目录
+    def save_path(self):
+        path = self.input_path.text().strip()
+        if not path:
+            message_notice(self, "请选择正确的游戏根目录！")
+            return
+
+        success = save_root_path(path)
+        if success:
+            message_notice(self, "保存成功！")
+        else:
+            message_notice(self, "保存失败！")
+
+    # 获取游戏根目录
+    def load_root_path(self):
+        root_path = get_game_info().get("root_path")
+        if not root_path:
+            message_notice(self.window(), "请选择正确的游戏根目录！", 5000, "warning")
+        self.input_path.setText(root_path)
