@@ -6,7 +6,7 @@
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtWidgets import (QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLabel, QPushButton)
 
-from common.message_utils import message_notice
+from common.message_utils import to_message
 from ui.about_ui import AboutTab
 from ui.quest_ui import QuestTab
 from ui.search_ui import SearchTab
@@ -63,7 +63,7 @@ class ToastTest(QWidget):
 
         # 添加按钮用于触发通知
         btn = QPushButton("点击我推送通知")
-        btn.clicked.connect(lambda: message_notice("这是测试页气泡", 5000, level="error"))
+        btn.clicked.connect(lambda: to_message("这是测试页气泡", 5000, level="error"))
         layout.addWidget(btn)
 
         self.setLayout(layout)

@@ -15,7 +15,6 @@ from PyQt6.QtWidgets import (
     QCheckBox
 )
 
-from common.message_utils import message_notice
 from controller.server_controller import (
     start_spt,
     start_fika,
@@ -137,8 +136,7 @@ class ServerTab(QWidget):
         self.setLayout(layout)
 
         self.start_button.clicked.connect(self.start)
-        self.stop_button.clicked.connect(
-            lambda: message_notice("关闭服务功能暂未实现", duration=3000, level="error"))
+        self.stop_button.clicked.connect(self.stop)
 
         self.update_log_layout()  # 初始化布局状态
 

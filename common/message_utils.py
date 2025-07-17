@@ -109,7 +109,7 @@ class MessageManager(QObject):
             y += toast.height() + spacing
 
 
-def message_notice(message: str, duration: int = 3000, level: str = "info"):
+def to_message(message: str, duration: int = 3000, level: str = "info"):
     """
         显示消息提示气泡
 

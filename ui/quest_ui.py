@@ -9,7 +9,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap, QIcon
 from PyQt6.QtWidgets import QVBoxLayout, QWidget, QLabel, QPushButton, QFrame, QGridLayout
 
-from common.message_utils import message_notice
+from common.message_utils import to_message
 
 
 class QuestTab(QWidget):
@@ -104,7 +104,7 @@ class QuestTab(QWidget):
 
         # === 调试按钮 ===
         btn = QPushButton("任务页气泡")
-        btn.clicked.connect(lambda: message_notice("这是任务页气泡", 3000, "info"))
+        btn.clicked.connect(lambda: to_message("这是任务页气泡", 3000, "info"))
         layout.addWidget(btn)
 
         self.setLayout(layout)
