@@ -34,28 +34,22 @@ class StatusIndicator(QLabel):
         self.setFixedSize(diameter, diameter)
 
     def set_color(self, color: str):
-        """设置指示灯颜色，并自动更新 tooltip"""
         self._color = color
-        self.update()  # 重绘
+        self.update()
 
-        # 状态提示映射
         status_tooltips = {
             "red": "服务状态：未运行",
             "green": "服务状态：正常运行",
             "orange": "服务状态：运行出错",
             "gray": "服务状态：未知"
         }
-
         self.setToolTip(status_tooltips.get(color, "服务状态：未知"))
 
     def paintEvent(self, event):
-        """绘制圆形指示灯"""
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setBrush(QColor(self._color))
         painter.setPen(Qt.PenStyle.NoPen)
-
-        # 为了视觉更舒服，稍微缩进一点绘制（可选）
         margin = 2
         painter.drawEllipse(
             margin,
@@ -72,12 +66,9 @@ class ServerTab(QWidget):
     """
 
     def __init__(self, parent=None):
-        """
-        :param parent: 主窗口 MainWindow，用于传入控制器做弹窗提示
-        """
         super().__init__(parent)
+        self.start_fika_checkbox = None
         self.status_indicator = None
-        self.status_label = None
         self.fika_server_log_output = None
         self.server_log_output = None
         self.headless_log_output = None
@@ -86,20 +77,22 @@ class ServerTab(QWidget):
         self.stop_button = None
         self.main_window = parent
         self.controller = None
+
+        # 新增 layout 成员变量
+        self.top_log_row = QHBoxLayout()
+        self.bottom_log_row = QHBoxLayout()
+
         self.init_ui()
         self.init_controller()
 
     def init_ui(self):
-        """初始化 UI 控件与布局"""
         layout = QVBoxLayout()
 
-        # 上层日志： Fika.Server 日志框，占据整行
         self.fika_server_log_output = QTextEdit()
         self.fika_server_log_output.setReadOnly(True)
-        self.fika_server_log_output.setFixedHeight(80)
+        self.fika_server_log_output.setFixedHeight(60)
         self.fika_server_log_output.setPlaceholderText("Fika.Server 日志...")
 
-        # 下层日志：SPT 日志 + Headless（预留）
         self.server_log_output = QTextEdit()
         self.server_log_output.setReadOnly(True)
         self.server_log_output.setPlaceholderText("SPT.Server 日志...")
@@ -108,22 +101,20 @@ class ServerTab(QWidget):
         self.headless_log_output.setReadOnly(True)
         self.headless_log_output.setPlaceholderText("Fika.Headless 日志...")
 
-        top_log_row = QHBoxLayout()
-        top_log_row.addWidget(self.fika_server_log_output)
+        # 初始添加控件（注意此处不做逻辑判断）
+        self.top_log_row.addWidget(self.server_log_output)
+        self.top_log_row.addWidget(self.headless_log_output)
+        self.bottom_log_row.addWidget(self.fika_server_log_output)
 
-        bottom_log_row = QHBoxLayout()
-        bottom_log_row.addWidget(self.server_log_output)
-        bottom_log_row.addWidget(self.headless_log_output)
-
-        # 状态灯 + 控制按钮
+        # 状态灯 + 控制区
         self.status_indicator = StatusIndicator()
         self.status_indicator.set_color("red")
 
         self.start_fika_checkbox = QCheckBox("启动Fika")
         self.start_fika_checkbox.setChecked(False)
         self.start_fika_checkbox.setToolTip("勾选后启动服务时一并启动 Fika.Server")
+        self.start_fika_checkbox.stateChanged.connect(self.update_log_layout)
 
-        # 控制按钮区
         self.log_all_checkbox = QCheckBox("全部日志")
         self.log_all_checkbox.setChecked(True)
         self.log_all_checkbox.setToolTip("勾选后将输出所有日志，包括 info/debug")
@@ -139,40 +130,53 @@ class ServerTab(QWidget):
         button_layout.addWidget(self.stop_button)
         button_layout.addStretch()
 
-        # 页面整体布局组装
-        layout.addLayout(top_log_row)
-        layout.addLayout(bottom_log_row)
+        # 页面整体组装
+        layout.addLayout(self.top_log_row)
+        layout.addLayout(self.bottom_log_row)
         layout.addLayout(button_layout)
         self.setLayout(layout)
 
-        # 信号连接
         self.start_button.clicked.connect(self.start)
-        # self.stop_button.clicked.connect(self.stop)
-        # self.start_button.clicked.connect(
-        #     lambda: message_notice("启动服务功能暂未实现", duration=3000, level="error"))
         self.stop_button.clicked.connect(
             lambda: message_notice("关闭服务功能暂未实现", duration=3000, level="error"))
 
+        self.update_log_layout()  # 初始化布局状态
+
+    def update_log_layout(self):
+        """根据“启动Fika”勾选状态动态调整日志布局"""
+        fika_enabled = self.start_fika_checkbox.isChecked()
+
+        for layout in [self.top_log_row, self.bottom_log_row]:
+            for i in reversed(range(layout.count())):
+                item = layout.takeAt(i)
+                widget = item.widget()
+                if widget:
+                    widget.setParent(None)
+
+        if fika_enabled:
+            self.top_log_row.addWidget(self.server_log_output)
+            self.top_log_row.addWidget(self.headless_log_output)
+            self.bottom_log_row.addWidget(self.fika_server_log_output)
+        else:
+            self.top_log_row.addWidget(self.server_log_output)
+            # 不显示 Fika 和 Headless
+
     def init_controller(self):
-        """初始化启动器控制器"""
+        """初始化控制器（预留）"""
         pass
 
     def start(self):
-        """启动服务（由控制器控制）"""
+        """启动服务（控制逻辑）"""
         start_spt()
-        start_fika()
+        if self.start_fika_checkbox.isChecked():
+            start_fika()
 
     def stop(self):
-        """停止服务（由控制器控制）"""
         stop_spt()
-        stop_fika()
+        if self.start_fika_checkbox.isChecked():
+            stop_fika()
 
     def append_log(self, text, source="server"):
-        """
-        追加日志到对应日志窗口
-        :param text: 日志内容
-        :param source: 日志来源，支持 "program" / "fika" / "server"
-        """
         if source == "fika":
             self.fika_server_log_output.append(text)
             self.fika_server_log_output.verticalScrollBar().setValue(
@@ -185,10 +189,6 @@ class ServerTab(QWidget):
             )
 
     def update_status_light(self, status: str):
-        """
-        更新服务状态灯颜色
-        :param status: "stopped" | "running" | "error"
-        """
         color = {
             "stopped": "red",
             "running": "green",
