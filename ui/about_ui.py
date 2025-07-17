@@ -83,6 +83,8 @@ class AboutTab(QWidget):
 
         # --- 礼包码区域 ---
         self.gift_list = get_all_gift_code()
+        if len(self.gift_list) == 0:
+            message_notice(self.window(), "未找到任何礼包码！", 5000, "warning")
         gift_group = QGroupBox(f"礼包码（{len(self.gift_list)}）")
         gift_group.setToolTip("点击礼包码即可复制")
         self.gift_layout = QGridLayout()
@@ -114,14 +116,14 @@ class AboutTab(QWidget):
     def save_path(self):
         path = self.input_path.text().strip()
         if not path:
-            message_notice(self, "请选择正确的游戏根目录！", 5000, "error")
+            message_notice(self.window(), "请选择正确的游戏根目录！", 5000, "error")
             return
 
         success = save_root_path(path)
         if success:
-            message_notice(self, "保存成功！")
+            message_notice(self.window(), "保存成功！")
         else:
-            message_notice(self, "请选择正确的游戏根目录！", 5000, "error")
+            message_notice(self.window(), "请选择正确的游戏根目录！", 5000, "error")
 
     # 获取游戏根目录
     def load_root_path(self):

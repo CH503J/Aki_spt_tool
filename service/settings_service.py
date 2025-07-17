@@ -103,6 +103,9 @@ def update_spt_info(path: str) -> bool:
 
 def get_gift_code() -> set[str]:
     game_root = fetch_game_info().get("root_path")
+    if game_root is None:
+        print("[警告] 未设置游戏根目录，无法获取礼包码")
+        return set()
     gift_path = os.path.join(game_root, "SPT_Data", "Server", "configs", "gifts.json")
     if not os.path.exists(gift_path):
         print(f"[警告] 未找到 gifts.json，检查根目录是否正确：{game_root}")

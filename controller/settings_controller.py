@@ -4,7 +4,12 @@
 # @Time      :2025/7/16 08:53
 # @Author    :CH503J
 
-from service.settings_service import fetch_game_info, save_game_info, update_spt_info, get_gift_code
+from service.settings_service import (
+    fetch_game_info,
+    save_game_info,
+    update_spt_info,
+    get_gift_code
+)
 
 
 def get_game_info() -> dict:

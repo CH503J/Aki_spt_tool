@@ -16,6 +16,12 @@ from PyQt6.QtWidgets import (
 )
 
 from common.message_utils import message_notice
+from controller.server_controller import (
+    start_spt,
+    start_fika,
+    stop_spt,
+    stop_fika
+)
 
 
 class StatusIndicator(QLabel):
@@ -61,9 +67,9 @@ class StatusIndicator(QLabel):
 
 class ServerTab(QWidget):
     """
-        启动器页面 UI 类
-        包含服务启动控制按钮、日志输出框、状态标签
-        """
+    启动器页面 UI 类
+    包含服务启动控制按钮、日志输出框、状态标签
+    """
 
     def __init__(self, parent=None):
         """
@@ -87,8 +93,7 @@ class ServerTab(QWidget):
         """初始化 UI 控件与布局"""
         layout = QVBoxLayout()
 
-
-        # 新结构：仅保留 Fika.Server 日志框，占据整行
+        # 上层日志： Fika.Server 日志框，占据整行
         self.fika_server_log_output = QTextEdit()
         self.fika_server_log_output.setReadOnly(True)
         self.fika_server_log_output.setFixedHeight(80)
@@ -103,7 +108,6 @@ class ServerTab(QWidget):
         self.headless_log_output.setReadOnly(True)
         self.headless_log_output.setPlaceholderText("Fika.Headless 日志...")
 
-        # 顶部仅保留 Fika 日志（程序日志已移除）
         top_log_row = QHBoxLayout()
         top_log_row.addWidget(self.fika_server_log_output)
 
@@ -115,6 +119,10 @@ class ServerTab(QWidget):
         self.status_indicator = StatusIndicator()
         self.status_indicator.set_color("red")
 
+        self.start_fika_checkbox = QCheckBox("启动Fika")
+        self.start_fika_checkbox.setChecked(False)
+        self.start_fika_checkbox.setToolTip("勾选后启动服务时一并启动 Fika.Server")
+
         # 控制按钮区
         self.log_all_checkbox = QCheckBox("全部日志")
         self.log_all_checkbox.setChecked(True)
@@ -125,6 +133,7 @@ class ServerTab(QWidget):
 
         button_layout = QHBoxLayout()
         button_layout.addWidget(self.status_indicator)
+        button_layout.addWidget(self.start_fika_checkbox)
         button_layout.addWidget(self.log_all_checkbox)
         button_layout.addWidget(self.start_button)
         button_layout.addWidget(self.stop_button)
@@ -139,8 +148,10 @@ class ServerTab(QWidget):
         # 信号连接
         # self.start_button.clicked.connect(self.start)
         # self.stop_button.clicked.connect(self.stop)
-        self.start_button.clicked.connect(lambda :message_notice(self, "启动服务功能暂未实现", duration=3000, level="error"))
-        self.stop_button.clicked.connect(lambda :message_notice(self, "关闭服务功能暂未实现", duration=3000, level="error"))
+        self.start_button.clicked.connect(
+            lambda: message_notice(self.window(), "启动服务功能暂未实现", duration=3000, level="error"))
+        self.stop_button.clicked.connect(
+            lambda: message_notice(self.window(), "关闭服务功能暂未实现", duration=3000, level="error"))
 
     def init_controller(self):
         """初始化启动器控制器"""
@@ -148,11 +159,13 @@ class ServerTab(QWidget):
 
     def start(self):
         """启动服务（由控制器控制）"""
-        self.controller.start_services()
+        start_spt()
+        start_fika()
 
     def stop(self):
         """停止服务（由控制器控制）"""
-        self.controller.stop_services()
+        stop_spt()
+        stop_fika()
 
     def append_log(self, text, source="server"):
         """
