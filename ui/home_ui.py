@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (QMainWindow, QTabWidget, QWidget, QVBoxLayout, QLab
 
 from common.message_utils import message_notice
 from ui.about_ui import AboutTab
+from ui.quest_ui import QuestTab
 from ui.search_ui import SearchTab
 from ui.server_ui import ServerTab
 
@@ -29,6 +30,8 @@ class HomeWindow(QMainWindow):
         tabs.addTab(ServerTab(), "启停")
 
         tabs.addTab(SearchTab(), "搜索")
+
+        tabs.addTab(QuestTab(), "任务")
 
         tabs.addTab(ToastTest(), "测试")
 
