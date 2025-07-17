@@ -23,17 +23,17 @@ class QuestTab(QWidget):
 
         # === 商人列表 ===
         self.traders = [
-            {"name": "Prapor：毛商", "img": "icon/59b91ca086f77469a81232e4.png"},
-            {"name": "Therapist：医生大妈", "img": "icon/59b91cab86f77469aa5343ca.png"},
-            {"name": "Skier：滑雪者", "img": "icon/59b91cb486f77469a81232e5.png"},
-            {"name": "Peacekeeper：美商", "img": "icon/59b91cbd86f77469aa5343cb.png"},
-            {"name": "Mechanic：机械师", "img": "icon/5a7c2ebb86f7746e324a06ab.png"},
-            {"name": "Ragman：服装师", "img": "icon/5ac3b86a86f77461491d1ad8.png"},
-            {"name": "Jaeger：老贱人", "img": "icon/5c06531a86f7746319710e1b.png"},
-            {"name": "Fence：黑商", "img": "icon/579dc571d53a0658a154fbec.png"},
-            {"name": "Lightkeeper：灯塔商人", "img": "icon/638f541a29ffd1183d187f57.png"},
-            {"name": "装甲车车长", "img": "icon/656f0f98d80a697f855d34b1.png"},
-            {"name": "竞技场商人", "img": "icon/6617beeaa9cfa777ca915b7c.png"},
+            {"name": "Prapor：毛商", "img": "trader_icon_tmp/59b91ca086f77469a81232e4.png"},
+            {"name": "Therapist：医生大妈", "img": "trader_icon_tmp/59b91cab86f77469aa5343ca.png"},
+            {"name": "Skier：滑雪者", "img": "trader_icon_tmp/59b91cb486f77469a81232e5.png"},
+            {"name": "Peacekeeper：美商", "img": "trader_icon_tmp/59b91cbd86f77469aa5343cb.png"},
+            {"name": "Mechanic：机械师", "img": "trader_icon_tmp/5a7c2ebb86f7746e324a06ab.png"},
+            {"name": "Ragman：服装师", "img": "trader_icon_tmp/5ac3b86a86f77461491d1ad8.png"},
+            {"name": "Jaeger：老贱人", "img": "trader_icon_tmp/5c06531a86f7746319710e1b.png"},
+            {"name": "Fence：黑商", "img": "trader_icon_tmp/579dc571d53a0658a154fbec.png"},
+            {"name": "Lightkeeper：灯塔商人", "img": "trader_icon_tmp/638f541a29ffd1183d187f57.png"},
+            {"name": "装甲车车长", "img": "trader_icon_tmp/656f0f98d80a697f855d34b1.png"},
+            {"name": "竞技场商人", "img": "trader_icon_tmp/6617beeaa9cfa777ca915b7c.png"},
         ]
 
         # === 顶部商人头像区域 ===
