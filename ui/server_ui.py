@@ -66,8 +66,10 @@ class ServerTab(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.headless_status = None
+        self.fika_status = None
         self.start_fika_checkbox = None
-        self.status_indicator = None
+        self.spt_status = None
         self.fika_server_log_output = None
         self.server_log_output = None
         self.headless_log_output = None
@@ -106,8 +108,12 @@ class ServerTab(QWidget):
         self.bottom_log_row.addWidget(self.fika_server_log_output)
 
         # 状态灯 + 控制区
-        self.status_indicator = StatusIndicator()
-        self.status_indicator.set_color("red")
+        self.spt_status = StatusIndicator()
+        self.spt_status.set_color("red")
+        self.fika_status = StatusIndicator()
+        self.fika_status.set_color("red")
+        self.headless_status = StatusIndicator()
+        self.headless_status.set_color("red")
 
         self.start_fika_checkbox = QCheckBox("启动Fika")
         self.start_fika_checkbox.setChecked(False)
@@ -122,7 +128,9 @@ class ServerTab(QWidget):
         self.stop_button = QPushButton("停止服务")
 
         button_layout = QHBoxLayout()
-        button_layout.addWidget(self.status_indicator)
+        button_layout.addWidget(self.spt_status)
+        button_layout.addWidget(self.fika_status)
+        button_layout.addWidget(self.headless_status)
         button_layout.addWidget(self.start_fika_checkbox)
         button_layout.addWidget(self.log_all_checkbox)
         button_layout.addWidget(self.start_button)
@@ -193,4 +201,4 @@ class ServerTab(QWidget):
             "error": "orange"
         }.get(status, "gray")
 
-        self.status_indicator.set_color(color)
+        self.spt_status.set_color(color)
