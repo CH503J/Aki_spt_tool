@@ -6,6 +6,8 @@
 from PyQt6.QtWidgets import QLabel, QApplication, QGraphicsOpacityEffect
 from PyQt6.QtCore import Qt, QTimer, QPropertyAnimation, QObject
 
+from common.global_store import get_main_window
+
 # 文本颜色 + emoji 映射
 LEVEL_STYLE = {
     "info":    {"emoji": "ℹ️",  "color": "#00A6ED"},
@@ -107,12 +109,11 @@ class MessageManager(QObject):
             y += toast.height() + spacing
 
 
-def message_notice(parent_widget, message: str, duration: int = 3000, level: str = "info"):
+def message_notice(message: str, duration: int = 3000, level: str = "info"):
     """
         显示消息提示气泡
 
         参数:
-            parent_widget (QWidget): 父级控件，用于定位消息提示的位置\n
             message (str): 要显示的消息文本\n
             duration (int): 消息显示持续时间(毫秒)，默认3000ms\n
             level (str): 消息级别，可选值: info/success/warning/error，默认info
@@ -122,5 +123,9 @@ def message_notice(parent_widget, message: str, duration: int = 3000, level: str
             多个消息会垂直堆叠显示\n
             自动处理消息的淡入淡出动画效果\n
         """
+    parent_widget = get_main_window()
+    if parent_widget is None:
+        print("未找到主窗口")
+        return
     manager = MessageManager.get(parent_widget)
     manager.show_toast(message, duration, level)

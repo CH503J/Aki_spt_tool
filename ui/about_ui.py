@@ -15,12 +15,12 @@ from controller.about_controller import get_app_info
 from controller.settings_controller import save_root_path, get_game_info, get_all_gift_code
 
 
-def copy_to_clipboard(text: str, parent_widget):
+def copy_to_clipboard(text: str):
     """点击即复制"""
     from PyQt6.QtGui import QGuiApplication
     QGuiApplication.clipboard().setText(text)
     print(f"[复制成功] {text}")
-    message_notice(parent_widget, f"礼包码 {text} 已复制到剪贴板！")
+    message_notice(f"礼包码 {text} 已复制到剪贴板！")
 
 
 class AboutTab(QWidget):
@@ -84,7 +84,7 @@ class AboutTab(QWidget):
         # --- 礼包码区域 ---
         self.gift_list = get_all_gift_code()
         if len(self.gift_list) == 0:
-            message_notice(self.window(), "未找到任何礼包码！", 5000, "warning")
+            message_notice("未找到任何礼包码！", 5000, "warning")
         gift_group = QGroupBox(f"礼包码（{len(self.gift_list)}）")
         gift_group.setToolTip("点击礼包码即可复制")
         self.gift_layout = QGridLayout()
@@ -94,7 +94,7 @@ class AboutTab(QWidget):
 
         for i, gift_code in enumerate(self.gift_list):
             btn = QPushButton(gift_code)
-            btn.clicked.connect(lambda _, v=gift_code: copy_to_clipboard(v, parent_widget=self.window()))
+            btn.clicked.connect(lambda _, v=gift_code: copy_to_clipboard(v))
             row, col = divmod(i, 5)
             self.gift_layout.addWidget(btn, row, col)
 
@@ -116,18 +116,18 @@ class AboutTab(QWidget):
     def save_path(self):
         path = self.input_path.text().strip()
         if not path:
-            message_notice(self.window(), "请选择正确的游戏根目录！", 5000, "error")
+            message_notice("请选择正确的游戏根目录！", 5000, "error")
             return
 
         success = save_root_path(path)
         if success:
-            message_notice(self.window(), "保存成功！")
+            message_notice("保存成功！")
         else:
-            message_notice(self.window(), "请选择正确的游戏根目录！", 5000, "error")
+            message_notice("请选择正确的游戏根目录！", 5000, "error")
 
     # 获取游戏根目录
     def load_root_path(self):
         root_path = get_game_info().get("root_path")
         if not root_path:
-            message_notice(self.window(), "请选择正确的游戏根目录！", 5000, "warning")
+            message_notice("请选择正确的游戏根目录！", 5000, "warning")
         self.input_path.setText(root_path)

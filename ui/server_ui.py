@@ -146,12 +146,12 @@ class ServerTab(QWidget):
         self.setLayout(layout)
 
         # 信号连接
-        # self.start_button.clicked.connect(self.start)
+        self.start_button.clicked.connect(self.start)
         # self.stop_button.clicked.connect(self.stop)
-        self.start_button.clicked.connect(
-            lambda: message_notice(self.window(), "启动服务功能暂未实现", duration=3000, level="error"))
+        # self.start_button.clicked.connect(
+        #     lambda: message_notice("启动服务功能暂未实现", duration=3000, level="error"))
         self.stop_button.clicked.connect(
-            lambda: message_notice(self.window(), "关闭服务功能暂未实现", duration=3000, level="error"))
+            lambda: message_notice("关闭服务功能暂未实现", duration=3000, level="error"))
 
     def init_controller(self):
         """初始化启动器控制器"""

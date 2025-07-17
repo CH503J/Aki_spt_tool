@@ -15,6 +15,6 @@ class SearchTab(QWidget):
         layout.addWidget(QLabel("这是搜索页"))
 
         btn = QPushButton("搜索页气泡")
-        btn.clicked.connect(lambda :message_notice(self.window(), "这是搜索页气泡", 5000, level="warning"))
+        btn.clicked.connect(lambda :message_notice("这是搜索页气泡", 5000, level="warning"))
         layout.addWidget(btn)
         self.setLayout(layout)

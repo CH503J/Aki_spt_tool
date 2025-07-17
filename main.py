@@ -8,6 +8,7 @@ import sys
 
 from PyQt6.QtWidgets import QApplication
 
+from common.global_store import set_main_window
 from ui.home_ui import HomeWindow
 
 # 获取项目结构命令   tree /F > structure.txt
@@ -15,5 +16,6 @@ if __name__ == '__main__':
     print("================================= AKI SPT TOOL =================================")
     app = QApplication(sys.argv)
     window = HomeWindow()
+    set_main_window(window)
     window.show()
     sys.exit(app.exec())

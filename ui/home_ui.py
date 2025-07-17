@@ -63,7 +63,7 @@ class ToastTest(QWidget):
 
         # 添加按钮用于触发通知
         btn = QPushButton("点击我推送通知")
-        btn.clicked.connect(lambda: message_notice(self.window(), "这是测试页气泡", 5000, level="error"))
+        btn.clicked.connect(lambda: message_notice("这是测试页气泡", 5000, level="error"))
         layout.addWidget(btn)
 
         self.setLayout(layout)

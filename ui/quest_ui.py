@@ -104,7 +104,7 @@ class QuestTab(QWidget):
 
         # === 调试按钮 ===
         btn = QPushButton("任务页气泡")
-        btn.clicked.connect(lambda: message_notice(self.window(), "这是任务页气泡", 3000, "info"))
+        btn.clicked.connect(lambda: message_notice("这是任务页气泡", 3000, "info"))
         layout.addWidget(btn)
 
         self.setLayout(layout)
