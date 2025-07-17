@@ -15,6 +15,7 @@ from common.message_utils import message_notice
 class QuestTab(QWidget):
     def __init__(self):
         super().__init__()
+        self.trader_frames = []  # 用于保存每个头像外层的 QFrame
         self.init_ui()
 
     def init_ui(self):
@@ -44,8 +45,17 @@ class QuestTab(QWidget):
         trader_layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
 
         for i, trader in enumerate(self.traders):
-            avatar_container = QVBoxLayout()
-            avatar_container.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            # 外层高亮框容器
+            outer_frame = QFrame()
+            outer_frame.setStyleSheet("""
+                QFrame {
+                    border: 2px solid transparent;
+                    border-radius: 6px;
+                }
+            """)
+            outer_layout = QVBoxLayout(outer_frame)
+            outer_layout.setContentsMargins(0, 0, 0, 0)
+            outer_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
             avatar_button = QPushButton()
             avatar_button.setFixedSize(75, 75)
@@ -70,16 +80,14 @@ class QuestTab(QWidget):
             avatar_button.setIconSize(avatar_button.size())
 
             # 绑定点击事件
-            avatar_button.clicked.connect(partial(self.show_trader_quests, trader))
+            avatar_button.clicked.connect(partial(self.show_trader_quests, trader, outer_frame))
 
-            avatar_container.addWidget(avatar_button)
-
-            container_widget = QWidget()
-            container_widget.setLayout(avatar_container)
+            outer_layout.addWidget(avatar_button)
+            self.trader_frames.append(outer_frame)
 
             row = i // 11
             col = i % 11
-            trader_layout.addWidget(container_widget, row, col)
+            trader_layout.addWidget(outer_frame, row, col)
 
         layout.addWidget(trader_frame)
 
@@ -101,6 +109,22 @@ class QuestTab(QWidget):
 
         self.setLayout(layout)
 
-    def show_trader_quests(self, trader: dict):
-        # 点击头像时更新下方任务区域内容
+    def show_trader_quests(self, trader: dict, frame: QFrame):
+        # 清除所有头像高亮样式
+        for f in self.trader_frames:
+            f.setStyleSheet("""
+                QFrame {
+                    border: 2px solid transparent;
+                    border-radius: 6px;
+                }
+            """)
+        # 高亮当前头像
+        frame.setStyleSheet("""
+            QFrame {
+                border: 2px solid #FFC000;
+                border-radius: 6px;
+            }
+        """)
+
+        # 更新下方任务区域内容
         self.quest_detail_label.setText(f"{trader['name']} 的任务信息展示（占位）")
